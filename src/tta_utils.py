@@ -98,47 +98,6 @@ def make_config(config_json_path):
         )
 
 
-def sim_env(sim=True):
-    """
-    Simulate environment variables in domino or other system by adding them to os.environ. 
-    This is only for situations where credentials are accessed from environment variables instead of provided directly.
-    Disable it by providing False to sim.
-    """
-    added_envs = {}
-
-    def add_env(name, value):
-        """ add a new entry of os.environ """
-        os.environ[name] = value
-        return {name: value} 
-
-    if sim:
-        print("Starting to simulate environment variables...")
-
-    # for tli_fraud domino api
-        added_envs.update(add_env('tlifraud_id', 'FRNYzLCbvx0zqb8tDpOTBnxuXoeVEY5SUdifDqKEY4FHTf2VqEOSzWsfShXYbWir'))
-        added_envs.update(add_env('tlifraud_pwd', 'FRNYzLCbvx0zqb8tDpOTBnxuXoeVEY5SUdifDqKEY4FHTf2VqEOSzWsfShXYbWir'))
-
-    # for tli_fraud poc api
-        added_envs.update(add_env('tlifraud_client_id', '4c1305597828416a81528611b5434287'))
-        added_envs.update(add_env('tlifraud_client_secret', '4ec2fe5f905a3697088231838de4a1a2536a382df28d479d3e42c8455273a78d'))
-
-    # for tli_fraud production api
-        added_envs.update(add_env('tlifraud_token_id', 'd51134ed456543b1be07cdec8a409421'))
-        added_envs.update(add_env('tlifraud_token_pwd', '0228793a44ce6b389a3b5ca66f5e4bc7ad4c4d09d91270a76ab3907655446c2d'))
-
-    # for india_rsm2_term domino api
-        added_envs.update(add_env("indiarsm2_term_id", "rseYdKcq5QOJ0K9LnG21wBvASG0APGjRH7jtwfqV03x6NHi50WaqvdXfEt3kqUVC"))
-        added_envs.update(add_env("indiarsm2_term_pwd", "rseYdKcq5QOJ0K9LnG21wBvASG0APGjRH7jtwfqV03x6NHi50WaqvdXfEt3kqUVC"))
-
-    # add more if needed
-        print("Completed simulating environment variables...")
-    
-    # check it out
-        print(f'env added: {list(added_envs.keys())}...')
-
-    return sim
-
-
 def call_api_once(url, input_json, **auth):
     try:
         response = requests.post(url=url, json={"data": input_json}, **auth)
