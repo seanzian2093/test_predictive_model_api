@@ -1,5 +1,6 @@
 """ auth class. """
 
+import datetime as dt
 import os
 import requests
 
@@ -14,9 +15,9 @@ class Auth:
         assert self.auth_config.get('auth_type', None) is not None, "auth_type should be provided"
 
         if self.auth_config['auth_type'] == 'Basic Auth':
-            return basic_auth(**self.auth_config)
+            return self.basic_auth(**self.auth_config)
         elif self.auth_config['auth_type'] == 'Bearer Token':
-            return bearer_token(**self.auth_config)
+            return self.bearer_token(**self.auth_config)
         else:
             raise NotImplementedError('Auth type is not implemented yet. Please contact author.')
 
@@ -33,7 +34,8 @@ class Auth:
             return {'auth': (u, p)}
         except Exception as exn:
             print(f'Error from basic_auth() - {str(exn)}')
-            return None
+            # return None
+            raise exn
 
 
     @staticmethod

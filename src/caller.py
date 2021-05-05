@@ -42,7 +42,7 @@ class APICaller:
         res_api_dct = {}
         expected_api_dct = {}
         for sample_key in sample_keys:
-            res_api = call_api_once(
+            res_api = self.call_api_once(
                 self.config.URL, 
                 self.config.INPUT_JSON[sample_key], 
                 # **self.config.AUTH

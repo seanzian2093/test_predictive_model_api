@@ -1,5 +1,6 @@
 
 from caller import APICaller
+from config import make_config
 
 def main(config_fp):
 
