@@ -16,6 +16,7 @@ Config = namedtuple('Config', [
 ])
 
 def make_config(config_json_path):
+    """ Config for all entire testing process."""
 
     def json_to_dct(json_path):
         with open(json_path, 'r', encoding='utf-8') as rjson:

@@ -1,9 +1,12 @@
+""" Class of API caller. """
 
 import random
 import requests
 from auth import Auth
 
 class APICaller:
+    """ Class of API caller. """
+
     def __init__(self, config):
         """Instantiate on a Config"""
         self.config = config
@@ -16,36 +19,40 @@ class APICaller:
 
     @staticmethod
     def call_api_once(url, input_json, **auth):
+        """ call API one time."""
         try:
             response = requests.post(url=url, json={"data": input_json}, **auth)
             if response.status_code == 200:
-                return response
+                res = response
             elif response.status_code == 401:
                 print(f"Connection error: {url} - Token expired")
-                return {'rerult': "Token expired"}
+                res = {'result': "Token expired"}
             else:
-                return {'rerult': f"{response.text}"}
+                res = {'result': f"{response.text}"}
 
-        except Exception as e:
-            print(f"Error: {url} - {str(e)}")
-            raise Exception(f"Error: {url} - {str(e)}")
+            return res
+
+        except Exception as exn:
+            exn_msg = f"Error: {url} - {str(exn)}"
+            print(exn_msg)
+            raise Exception(exn_msg) from exn
 
 
     def call_api_batch(self):
+        """ call API multiple time."""
 
         sample_n = int(self.config.SAMPLE_RATE * len(self.config.INPUT_JSON))
         print(f'\nSetup test cases: {sample_n} cases...')
 
         sample_keys = random.sample(self.config.INPUT_JSON.keys(), sample_n)
-        print(f'Randomly selected cases: ["{sample_keys[0]}", ..., "{sample_keys[sample_n - 1]}"]...')
+        print(f'Randomly selected cases: ["{sample_keys[0]}", ..., "{sample_keys[sample_n-1]}"]...')
 
         res_api_dct = {}
         expected_api_dct = {}
         for sample_key in sample_keys:
             res_api = self.call_api_once(
-                self.config.URL, 
-                self.config.INPUT_JSON[sample_key], 
-                # **self.config.AUTH
+                self.config.URL,
+                self.config.INPUT_JSON[sample_key],
                 **self._auth
             ).json()['result'][self.config.RETURN_KEY]
 
