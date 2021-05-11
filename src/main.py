@@ -1,4 +1,3 @@
-
 """ Main function to call api in batch mode."""
 from caller import APICaller
 from config import make_config

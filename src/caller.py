@@ -23,15 +23,16 @@ class APICaller:
         try:
             response = requests.post(url=url, json={"data": input_json}, **auth)
             if response.status_code == 200:
-                res = response
+                # if return code 200 then the result can be dumped to a dict
+                return response.json()['result']
             elif response.status_code == 401:
-                print(f"Connection error: {url} - Token expired")
-                res = {'result': "Token expired"}
+                exn_msg = f"Connection error: {url} - Token expired"
+                print(exn_msg)
+                raise Exception(exn_msg)
             else:
-                res = {'result': f"{response.text}"}
-
-            return res
-
+                exn_msg = f"Error: {response.text}"
+                print(exn_msg)
+                raise Exception(exn_msg)
         except Exception as exn:
             exn_msg = f"Error: {url} - {str(exn)}"
             print(exn_msg)
@@ -50,11 +51,11 @@ class APICaller:
         res_api_dct = {}
         expected_api_dct = {}
         for sample_key in sample_keys:
-            res_api = self.call_api_once(
-                self.config.URL,
-                self.config.INPUT_JSON[sample_key],
-                **self._auth
-            ).json()['result'][self.config.RETURN_KEY]
+            res_api_0 = self.call_api_once(self.config.URL, self.config.INPUT_JSON[sample_key], **self._auth)
+            if isinstance(res_api_0, dict):
+                res_api = res_api_0[self.config.RETURN_KEY]
+            else:
+                res_api = res_api_0
 
             res_api_dct.update({sample_key: res_api})
 
